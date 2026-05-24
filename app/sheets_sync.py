@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 DEFAULT_CREDENTIALS_FILE = "credentials.json"
-DEFAULT_RANGE = "Applications!A:E"
+DEFAULT_RANGE = "Applications!A:G"
 
 
 def get_sheets_service(credentials_file: str | None = None):
@@ -31,6 +31,8 @@ def _format_row(app_data: dict) -> list[str]:
         str(app_data.get("id", "")),
         str(app_data.get("company_name", "")),
         str(app_data.get("job_title", "")),
+        str(app_data.get("job_description", "")),
+        str(app_data.get("application_link", "")),
         str(app_data.get("status", "Scanned")),
         str(date_applied),
     ]
@@ -72,7 +74,7 @@ def sync_application_to_sheets(app_data: dict, operation: str = "append") -> Non
 
     service.spreadsheets().values().update(
         spreadsheetId=sheet_id,
-        range=f"Applications!A{row_number}:E{row_number}",
+        range=f"Applications!A{row_number}:G{row_number}",
         valueInputOption="USER_ENTERED",
         body={"values": [row_values]},
     ).execute()

@@ -7,3 +7,4 @@ google-genai
 jinja2
 weasyprint
 reportlab
+playwright

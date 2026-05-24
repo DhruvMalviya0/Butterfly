@@ -21,6 +21,7 @@ class ApplicationCreate(BaseModel):
     company_name: str
     job_title: str
     job_description: Optional[str] = None
+    application_link: Optional[str] = None
     status: Optional[str] = "Scanned"
 
 
@@ -28,6 +29,7 @@ class ApplicationUpdate(BaseModel):
     company_name: Optional[str] = None
     job_title: Optional[str] = None
     job_description: Optional[str] = None
+    application_link: Optional[str] = None
     status: Optional[str] = None
 
 
@@ -38,5 +40,6 @@ class ApplicationRead(BaseModel):
     company_name: str
     job_title: str
     job_description: Optional[str]
+    application_link: Optional[str]
     status: str
     date_applied: datetime
