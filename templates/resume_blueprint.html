@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tailored Resume</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #1d2433;
+            --muted: #5d667a;
+            --accent: #0f766e;
+            --line: #d9e1ea;
+            --paper: #ffffff;
+            --wash: #f4f8fb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 28px;
+            background: #e9eef3;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--ink);
+        }
+
+        .resume-container {
+            max-width: 820px;
+            margin: 0 auto;
+            background: var(--paper);
+            padding: 34px 38px;
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 30px rgba(29, 36, 51, 0.08);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--ink);
+            padding-bottom: 16px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: 0.02em;
+        }
+
+        .contact {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .summary {
+            margin: 0 0 16px;
+            color: var(--muted);
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .section-title {
+            margin: 18px 0 12px;
+            padding: 8px 12px;
+            background: var(--wash);
+            border-left: 4px solid var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+        }
+
+        .project-card {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            break-inside: avoid;
+        }
+
+        .project-card h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
+        }
+
+        .project-card span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .project-card p {
+            margin: 0 0 10px;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: var(--muted);
+        }
+
+        .project-card a {
+            color: var(--ink);
+            font-size: 12px;
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+
+            .resume-container {
+                box-shadow: none;
+                border: none;
+                max-width: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <div class="header">
+            <div>
+                <h1>{{ candidate_name }}</h1>
+                <p class="contact">{{ candidate_contact }}</p>
+            </div>
+            <div class="contact">Tailored for {{ company_name }} · {{ job_title }}</div>
+        </div>
+
+        <p class="summary">{{ job_description }}</p>
+
+        <div class="section-title">SELECTED TECHNICAL PROJECTS</div>
+
+        {% for project in selected_projects %}
+        <div class="project-card">
+            <h3>{{ project.title }} — <span>{{ project.tech_stack }}</span></h3>
+            <p>{{ project.description }}</p>
+            <a href="{{ project.github_link }}">Source Code</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
