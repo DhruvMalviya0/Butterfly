@@ -6,6 +6,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
 
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.orm import Session
@@ -22,6 +23,14 @@ except Exception:  # pragma: no cover - depends on native system libraries
     HTML = None
 
 app = FastAPI(title="Butterfly Phase 1 API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 TEMPLATE_DIR = BASE_DIR / "templates"
@@ -48,6 +57,11 @@ def create_project(payload: ProjectCreate, db: Session = Depends(get_db)):
     return project
 
 
+@app.get("/projects", response_model=list[ProjectRead])
+def list_projects(db: Session = Depends(get_db)):
+    return db.query(Project).order_by(Project.id.desc()).all()
+
+
 @app.post("/applications", response_model=ApplicationRead)
 def create_application(
     payload: ApplicationCreate,
@@ -60,6 +74,11 @@ def create_application(
     db.refresh(application)
     background_tasks.add_task(sync_application_to_sheets, _serialize_application(application), "append")
     return application
+
+
+@app.get("/applications", response_model=list[ApplicationRead])
+def list_applications(db: Session = Depends(get_db)):
+    return db.query(Application).order_by(Application.id.desc()).all()
 
 
 @app.put("/applications/{application_id}", response_model=ApplicationRead)
