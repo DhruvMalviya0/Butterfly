@@ -27,6 +27,7 @@ class Application(Base):
     company_name = Column(String, nullable=False)
     job_title = Column(String, nullable=False)
     job_description = Column(Text, nullable=True)
+    application_link = Column(String, nullable=True)
     status = Column(String, nullable=False, default="Scanned", server_default="Scanned")
     date_applied = Column(DateTime, nullable=False, default=datetime.utcnow)
 
@@ -34,6 +35,7 @@ class Application(Base):
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
     _ensure_application_job_description_column()
+    _ensure_application_link_column()
 
 
 def _ensure_application_job_description_column() -> None:
@@ -47,6 +49,19 @@ def _ensure_application_job_description_column() -> None:
 
     with engine.begin() as connection:
         connection.execute(text("ALTER TABLE applications ADD COLUMN job_description TEXT"))
+
+
+def _ensure_application_link_column() -> None:
+    inspector = inspect(engine)
+    if "applications" not in inspector.get_table_names():
+        return
+
+    column_names = {column["name"] for column in inspector.get_columns("applications")}
+    if "application_link" in column_names:
+        return
+
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE applications ADD COLUMN application_link TEXT"))
 
 
 def get_db():

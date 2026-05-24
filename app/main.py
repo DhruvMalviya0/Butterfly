@@ -1,5 +1,7 @@
+import asyncio
 import ast
 import json
+import os
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
 
@@ -8,10 +10,11 @@ from fastapi.responses import FileResponse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.orm import Session
 
-from .database import Application, Project, get_db, init_db
+from .database import Application, Project, SessionLocal, get_db, init_db
 from .schemas import ApplicationCreate, ApplicationRead, ApplicationUpdate, ProjectCreate, ProjectRead
 from .sheets_sync import sync_application_to_sheets
 from matcher import get_best_matching_projects
+from scraper import harvest_job_listings
 
 try:
     from weasyprint import HTML
@@ -80,6 +83,12 @@ def update_application(
     return application
 
 
+@app.post("/automation/trigger-ingestion")
+def trigger_pipeline_ingestion(background_tasks: BackgroundTasks):
+    background_tasks.add_task(run_scraper_background_task)
+    return {"message": "Autonomous job harvesting pipeline initialized in background."}
+
+
 @app.post("/applications/generate-resume/{app_id}")
 def generate_resume(app_id: int, db: Session = Depends(get_db)):
     application = db.get(Application, app_id)
@@ -141,6 +150,7 @@ def _serialize_application(application: Application) -> dict:
         "company_name": application.company_name,
         "job_title": application.job_title,
         "job_description": application.job_description,
+        "application_link": application.application_link,
         "status": application.status,
         "date_applied": application.date_applied,
     }
@@ -247,3 +257,31 @@ def _write_pdf_fallback(selected_projects: list[Project], company_name: str, job
         author=CANDIDATE_NAME,
     )
     doc.build(story)
+
+
+def run_scraper_background_task() -> None:
+    target_portal_url = os.getenv("JOB_PORTAL_URL", "https://example-internship-portal.com/jobs?q=python")
+    harvested_data = asyncio.run(harvest_job_listings(target_portal_url))
+
+    db = SessionLocal()
+    try:
+        for job in harvested_data:
+            if job["status"] == "Scam":
+                continue
+
+            db_app = Application(
+                company_name=job["company_name"],
+                job_title=job["job_title"],
+                job_description=job.get("job_description"),
+                application_link=job.get("application_link"),
+                status=job["status"],
+            )
+            db.add(db_app)
+            db.commit()
+            db.refresh(db_app)
+            try:
+                sync_application_to_sheets(_serialize_application(db_app), "append")
+            except Exception:
+                pass
+    finally:
+        db.close()
