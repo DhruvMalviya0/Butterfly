@@ -20,12 +20,14 @@ class ProjectRead(ProjectCreate):
 class ApplicationCreate(BaseModel):
     company_name: str
     job_title: str
+    job_description: Optional[str] = None
     status: Optional[str] = "Scanned"
 
 
 class ApplicationUpdate(BaseModel):
     company_name: Optional[str] = None
     job_title: Optional[str] = None
+    job_description: Optional[str] = None
     status: Optional[str] = None
 
 
@@ -35,5 +37,6 @@ class ApplicationRead(BaseModel):
     id: int
     company_name: str
     job_title: str
+    job_description: Optional[str]
     status: str
     date_applied: datetime
