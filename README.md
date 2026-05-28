@@ -1,7 +1,7 @@
-# Project Cascade 🦋
+# Project Butterfly 🦋
 > **An Autonomous Multi-Site Recruitment Pipeline, Dynamic Document Assembly Engine & Dev-Journal CRM Workspace**
 
-Project Cascade is an advanced, full-stack automation platform designed to flip the traditional internship hunt on its head. Instead of sending standard, static applications, this system acts as an autonomous pipeline that scrapes top job boards, runs security checks to neutralize scams, and uses LLM semantic vector space matching to compile targeted resumes tailored to a company's unique profile on the fly. 
+Project Butterfly is an advanced, full-stack automation platform designed to flip the traditional internship hunt on its head. Instead of sending standard, static applications, this system acts as an autonomous pipeline that scrapes top job boards, runs security checks to neutralize scams, and uses LLM semantic vector space matching to compile targeted resumes tailored to a company's unique profile on the fly. 
 
 Additionally, it features an integrated **Autonomous Technical Branding Engine**—a developer journal that synthesizes raw engineering logs or active work-in-progress drafts into professional "Build in Public" LinkedIn posts.
 
@@ -19,7 +19,7 @@ The architecture operates via a decoupled, asynchronous engine loop split across
 
 ## 🛠️ Consolidated Tech Stack
 
-Project Cascade maintains strict technical boundaries, relying on exactly one definitive industry tool per logical task:
+Project Butterfly maintains strict technical boundaries, relying on exactly one definitive industry tool per logical task:
 
 | Sub-System Node | Technology Selection | Operational Rationale |
 | :--- | :--- | :--- |
