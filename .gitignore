@@ -3,4 +3,13 @@ __pycache__/
 *.pyc
 *.db
 credentials.json
+<<<<<<< HEAD
+=======
+*.log
+.env
+.env.local
+frontend/.env.local
+frontend/.next/
+frontend/node_modules/
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
 tailored_resume.pdf

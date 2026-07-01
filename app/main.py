@@ -26,7 +26,11 @@ app = FastAPI(title="Butterfly Phase 1 API")
 
 app.add_middleware(
     CORSMiddleware,
+<<<<<<< HEAD
     allow_origins=["http://localhost:3000"],
+=======
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,8 +39,11 @@ app.add_middleware(
 BASE_DIR = Path(__file__).resolve().parents[1]
 TEMPLATE_DIR = BASE_DIR / "templates"
 PDF_OUTPUT_PATH = BASE_DIR / "tailored_resume.pdf"
+<<<<<<< HEAD
 CANDIDATE_NAME = "Your Name"
 CANDIDATE_CONTACT = "Email | GitHub | LinkedIn"
+=======
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
 jinja_env = Environment(
     loader=FileSystemLoader(str(TEMPLATE_DIR)),
     autoescape=select_autoescape(["html", "xml"]),
@@ -102,6 +109,7 @@ def update_application(
     return application
 
 
+<<<<<<< HEAD
 @app.post("/automation/trigger-ingestion")
 def trigger_pipeline_ingestion(background_tasks: BackgroundTasks):
     background_tasks.add_task(run_scraper_background_task)
@@ -119,6 +127,18 @@ def generate_resume(app_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="No projects available for resume generation")
 
     job_description = application.job_description or application.job_title
+=======
+@app.get("/applications/generate-resume/{app_id}")
+def generate_tailored_resume(app_id: int, db: Session = Depends(get_db)):
+    application = db.get(Application, app_id)
+    if application is None:
+        raise HTTPException(status_code=404, detail="Application node tracking record not found")
+
+    all_projects = db.query(Project).all()
+    if not all_projects:
+        raise HTTPException(status_code=400, detail="No projects available for resume generation")
+
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
     project_pool = [
         {
             "id": project.id,
@@ -175,15 +195,36 @@ def _serialize_application(application: Application) -> dict:
     }
 
 
+<<<<<<< HEAD
 def _rank_project_ids(job_description: str, project_pool: list[dict]) -> list[int]:
     response_text = get_best_matching_projects(job_description, project_pool)
+=======
+def _select_projects(job_text: str, project_pool: list[dict], all_projects: list[Project]) -> list[Project]:
+    try:
+        response_text = get_best_matching_projects(job_text, project_pool)
+        matched_ids = _parse_project_ids(response_text)
+        selected_projects = [project for project in all_projects if project.id in matched_ids]
+        if selected_projects:
+            return selected_projects[:3]
+    except Exception:
+        pass
+
+    return all_projects[:3]
+
+
+def _parse_project_ids(response_text: str) -> list[int]:
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
     try:
         parsed = json.loads(response_text)
     except json.JSONDecodeError:
         parsed = ast.literal_eval(response_text)
 
     if not isinstance(parsed, list):
+<<<<<<< HEAD
         raise HTTPException(status_code=502, detail="Gemini did not return a project list")
+=======
+        return []
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
 
     project_ids: list[int] = []
     for item in parsed:
@@ -197,6 +238,7 @@ def _rank_project_ids(job_description: str, project_pool: list[dict]) -> list[in
     return project_ids[:3]
 
 
+<<<<<<< HEAD
 def _write_pdf_fallback(selected_projects: list[Project], company_name: str, job_title: str, job_description: str) -> None:
     from reportlab.lib.pagesizes import letter
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -304,3 +346,73 @@ def run_scraper_background_task() -> None:
                 pass
     finally:
         db.close()
+=======
+# ── Personal resume constants – update these to match your details ──────────
+_CANDIDATE_NAME = "Dhruv Malviya"
+_CANDIDATE_LOCATION = "India"
+_CANDIDATE_LINKS = "dhruvmalviya@email.com | github.com/dhruvmalviya | linkedin.com/in/dhruvmalviya"
+_TECHNICAL_SKILLS = {
+    "Languages": "Python, TypeScript, JavaScript, SQL",
+    "Frameworks": "FastAPI, Next.js, React",
+    "Tools & Platforms": "Git, SQLite, PostgreSQL, Google Sheets API",
+}
+_PROFESSIONAL_STATEMENT = (
+    "Motivated software developer with hands-on experience building full-stack applications "
+    "and automation pipelines. Passionate about clean architecture, developer tooling, and "
+    "data-driven systems."
+)
+_EDUCATION = [
+    {
+        "school": "Your University Name",
+        "years": "2022 – 2026",
+        "detail": "B.Tech / B.E. in Computer Science (or your degree)",
+    }
+]
+_ACHIEVEMENTS = [
+    "Describe an achievement or extracurricular here.",
+    "Another achievement, award, or activity.",
+]
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def _render_resume_html(company_name: str, job_title: str, selected_projects: list[Project]) -> str:
+    try:
+        template = jinja_env.get_template("resume_blueprint.html")
+        return template.render(
+            candidate_name=_CANDIDATE_NAME,
+            candidate_location=_CANDIDATE_LOCATION,
+            candidate_links=_CANDIDATE_LINKS,
+            company_name=company_name,
+            job_title=job_title,
+            selected_projects=selected_projects,
+            technical_skills=_TECHNICAL_SKILLS,
+            professional_statement=_PROFESSIONAL_STATEMENT,
+            education=_EDUCATION,
+            achievements=_ACHIEVEMENTS,
+        )
+    except TemplateNotFound:
+        project_cards = "".join(
+            f"<div><h3>{project.title} — {project.tech_stack}</h3><p>{project.description}</p><a href='{project.github_link}'>Source Code</a></div>"
+            for project in selected_projects
+        )
+        return f"""
+        <html>
+          <body>
+            <h1>{_CANDIDATE_NAME}</h1>
+            <p>{_CANDIDATE_LINKS}</p>
+            <p>Tailored for {company_name} · {job_title}</p>
+            <h2>Selected Technical Projects</h2>
+            {project_cards}
+          </body>
+        </html>
+        """
+
+
+def _write_resume_pdf(rendered_html: str) -> None:
+    from xhtml2pdf import pisa
+
+    with open(PDF_OUTPUT_PATH, "wb") as f:
+        result = pisa.CreatePDF(rendered_html, dest=f)
+    if result.err:
+        raise HTTPException(status_code=500, detail="PDF generation failed")
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)

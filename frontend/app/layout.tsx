@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+<<<<<<< HEAD
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,6 +16,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Project Cascade Dashboard",
   description: "Full-stack analytics dashboard for Project Cascade.",
+=======
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Project Cascade Dashboard",
+  description: "Frontend command center for Project Cascade",
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
 };
 
 export default function RootLayout({
@@ -23,6 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+<<<<<<< HEAD
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
@@ -31,3 +40,10 @@ export default function RootLayout({
     </html>
   );
 }
+=======
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)

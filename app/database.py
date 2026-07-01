@@ -1,9 +1,14 @@
 from datetime import datetime
+import os
 
 from sqlalchemy import Column, DateTime, Integer, String, Text, create_engine, inspect, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "sqlite:///./butterfly.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_PATH = os.path.join(BASE_DIR, "butterfly.db")
+DATABASE_URL = "sqlite:///" + DATABASE_PATH.replace("\\", "/")
+
+print(f"Connecting SQLite engine to: {DATABASE_URL}")
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

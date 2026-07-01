@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,3 +147,190 @@
     </div>
 </body>
 </html>
+=======
+<html>
+<head>
+<style>
+  @page {
+    size: letter;
+    margin: 0.6in 0.7in;
+  }
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+
+  /* ---------- Header ---------- */
+  .name {
+    font-size: 20pt;
+    font-weight: bold;
+    margin: 0 0 2px 0;
+  }
+  .role-line {
+    font-size: 11pt;
+    color: #333333;
+    margin: 0 0 4px 0;
+  }
+  .contact-line {
+    font-size: 9pt;
+    color: #444444;
+    margin: 0 0 10px 0;
+  }
+  .header-rule {
+    border-bottom: 1.4pt solid #1a1a1a;
+    margin-bottom: 12px;
+  }
+
+  /* ---------- Tailored-for banner ---------- */
+  .tailored-line {
+    font-size: 9.5pt;
+    font-style: italic;
+    color: #444444;
+    margin-bottom: 14px;
+  }
+
+  /* ---------- Section headers ---------- */
+  .section-title {
+    font-size: 10.5pt;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 0.8pt solid #999999;
+    padding-bottom: 3px;
+    margin: 16px 0 10px 0;
+  }
+
+  /* ---------- Project entries ---------- */
+  .project-block {
+    margin-bottom: 12px;
+  }
+  table.project-header {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.project-header td {
+    padding: 0;
+  }
+  .project-title {
+    font-size: 10.5pt;
+    font-weight: bold;
+  }
+  .project-tech {
+    font-size: 9pt;
+    color: #555555;
+    text-align: right;
+  }
+  .project-desc {
+    font-size: 9.5pt;
+    color: #2a2a2a;
+    margin: 3px 0 3px 0;
+  }
+  .project-link {
+    font-size: 8.5pt;
+    color: #0f766e;
+  }
+
+  /* ---------- Skills ---------- */
+  .skills-block {
+    margin-bottom: 4px;
+  }
+  .skill-line {
+    font-size: 9.5pt;
+    margin-bottom: 3px;
+  }
+  .skill-category {
+    font-weight: bold;
+  }
+
+  /* ---------- Professional statement ---------- */
+  .statement-block {
+    font-size: 9.5pt;
+    color: #2a2a2a;
+    margin-bottom: 4px;
+  }
+
+  /* ---------- Education ---------- */
+  .edu-block {
+    margin-bottom: 10px;
+  }
+
+  /* ---------- Achievements ---------- */
+  .achievements-list {
+    margin: 0;
+    padding-left: 16px;
+  }
+  .achievements-list li {
+    font-size: 9.5pt;
+    color: #2a2a2a;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="name">{{ candidate_name }}</div>
+  <div class="contact-line">{{ candidate_location }} | {{ candidate_links }}</div>
+  <div class="header-rule"></div>
+
+  <div class="tailored-line">Tailored for {{ company_name }} &middot; {{ job_title }}</div>
+
+  {% if technical_skills %}
+  <div class="section-title">Technical Skills</div>
+  <div class="skills-block">
+    {% for category, items in technical_skills.items() %}
+    <div class="skill-line"><span class="skill-category">{{ category }}:</span> {{ items }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if professional_statement %}
+  <div class="section-title">Professional Statement</div>
+  <div class="statement-block">{{ professional_statement }}</div>
+  {% endif %}
+
+  <div class="section-title">Selected Technical Projects</div>
+
+  {% for project in selected_projects %}
+  <div class="project-block">
+    <table class="project-header">
+      <tr>
+        <td class="project-title">{{ project.title }}</td>
+        <td class="project-tech">{{ project.tech_stack }}</td>
+      </tr>
+    </table>
+    <div class="project-desc">{{ project.description }}</div>
+    {% if project.github_link %}
+    <div class="project-link">Source Code &rarr; {{ project.github_link }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  {% if education %}
+  <div class="section-title">Education</div>
+  {% for entry in education %}
+  <div class="edu-block">
+    <table class="project-header">
+      <tr>
+        <td class="project-title">{{ entry.school }}</td>
+        <td class="project-tech">{{ entry.years }}</td>
+      </tr>
+    </table>
+    <div class="project-desc">{{ entry.detail }}</div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if achievements %}
+  <div class="section-title">Achievements &amp; Extracurriculars</div>
+  <ul class="achievements-list">
+    {% for item in achievements %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+</body>
+</html>
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)

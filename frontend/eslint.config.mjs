@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
@@ -16,3 +17,8 @@ const eslintConfig = defineConfig([
 ]);
 
 export default eslintConfig;
+=======
+import nextVitals from "eslint-config-next/core-web-vitals";
+
+export default nextVitals;
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)

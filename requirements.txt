@@ -3,8 +3,13 @@ uvicorn[standard]
 sqlalchemy
 google-api-python-client
 google-auth
+<<<<<<< HEAD
 google-genai
 jinja2
 weasyprint
 reportlab
 playwright
+=======
+jinja2
+xhtml2pdf
+>>>>>>> b212720 (feat: initialize project structure with Next.js frontend, SQLite database, and resume generation templates)
